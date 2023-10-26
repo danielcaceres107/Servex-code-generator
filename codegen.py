@@ -253,9 +253,6 @@ def ir_a_pagina_siguiente(notebook):
     # Seleccionar la página siguiente
     notebook.select(indice_siguiente)
 
-    #esconder pagina
-    notebook.hide(indice_actual)
-
 def ir_a_pagina_anterior(notebook):
     # Obtener el índice de la página actual
     indice_actual = notebook.index(notebook.select())
@@ -266,13 +263,15 @@ def ir_a_pagina_anterior(notebook):
     # Seleccionar la página anterior
     notebook.select(indice_anterior)
 
-    #esconder pagina
-    notebook.hide(indice_actual)
-
 def abrir_pagina_hybrid():
     #crear pagina 3
     page3 = tk.Frame(notebook, bg="#939494")
     page3.pack(fill="both", expand=True)
+
+    # Agregar las páginas al notebook
+    notebook.add(page3, text="Página 3")
+
+    notebook.select(page3)
 
     # titulo pagina 3
     etiqueta_title3 = tk.Label(page3, text="AÑADE UN ITEM", bg="#939494", fg="white", font= font.Font(family="Roboto", size=12, weight='bold'))
