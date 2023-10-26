@@ -167,9 +167,9 @@ def generate(tipo_extension_seleccionado, codigo_catalogo, id_catalogo, catalog_
         os.remove(nuevo_nombre_archivo)
     #cambiar nombre 
     os.rename(ruta_archivo_header, nuevo_nombre_archivo)
-
-    # poner imagen producto #
-    shutil.copy(prodimg, carpeta_images)
+    if tipo_extension_seleccionado == "hybrid":
+        # poner imagen producto #
+        shutil.copy(prodimg, carpeta_images)
 
 def changeLine(ruta_archivo, last_line, new_line):
     #leer el contenido
