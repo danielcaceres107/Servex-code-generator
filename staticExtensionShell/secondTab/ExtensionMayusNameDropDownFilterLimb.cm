@@ -1,0 +1,232 @@
+/** Configura CET Source Copyright Notice (CETSC)
+
+   This file contains Configura CM source code and is part of the
+   Configura CET Development Platform (CETDEV). Configura CM
+   is a programming language created by Configura Sverige AB.
+   Configura, Configura CET and Configura CM are trademarks of
+   Configura Sverige AB. Configura Sverige AB owns Configura CET,
+   Configura CM, and CETDEV.
+
+   Copyright (C) 2004 Configura Sverige AB, All rights reserved.
+
+   You can modify this source file under the terms of the Configura CET
+   Source Licence Agreement (CETSL) as published by Configura Sverige AB.
+
+   Configura Sverige AB has exclusive rights to all changes, modifications,
+   and corrections of this source file. Configura Sverige AB has exclusive
+   rights to any new source file containing material from this source file.
+   A new source file based on this source file or containing material from
+   this source file has to include this Configura CET Source Copyright Notice
+   in its full content. All changes, modifications, and corrections mentioned
+   above shall be reported to Configura Sverige AB within One Month from
+   the date that the modification occurred.
+
+   Configura CM is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+   See the CETSL for more details.
+
+   You should have received a copy of the CETSL along with the CETDEV.
+   If not, write to Configura Sverige AB, Box 306, SE-581 02 Linköping, Sweden.
+   Tel +46 13377800, Fax +46 13377855,
+   Email: info@configura.com, www.configura.com
+
+   END OF CETSC
+*/
+package custom.extensionnamemin.secondTab;
+
+use cm.abstract.dataSymbol.ui.libraryBuilder;
+use cm.abstract.dataSymInterface.database;
+use cm.abstract.dataSymbol.ui;
+
+
+public class ExtensionMayusNameDropDownFilterLimb extends DsFilterLimb {
+
+    public str[] sectionFilters();
+    public DropDownTreeView treeView;
+    
+    public Window build(Window window) {
+	ToolboxSectionedScrollableSubWindow toolboxWindow = window.ToolboxSectionedScrollableSubWindow;
+	if (!toolboxWindow) {
+	    return super(..);
+	}
+
+	this.window = window;
+ 
+	filterWindow = DsFilterLimbSubWindow(window, this, frameStyle=noFrame);
+	filterWindow.w = dsDataCatalogLimbMaxRight;
+
+	toolboxWindow.myAddSection(filterWindow, label, key=key#"Section");
+	
+	treeView = ExtensionMayusNameFilterDropDown(filterWindow, listBoxStyle=true, autoGestures=false,
+				     callback=function treeViewAddCB);
+	treeView.ExtensionMayusNameFilterDropDown.limb = this;
+	
+	for (filter in sectionFilters) {
+	    treeView.getRoot().appendChild(TreeViewItem(filter, filter));
+	}
+	treeView.finalize();
+	if (sectionFilters) {
+	    treeView.select(TreeViewItem(sectionFilters[0], sectionFilters[0]));
+	    treeView.ExtensionMayusNameFilterDropDown.limb.substitute(sectionFilters[0]);
+	}
+
+		
+	treeView.autoSize();
+	treeView.extendRight();
+	
+	filterWindow.autoSize();
+	return filterWindow;
+	
+    }
+    
+    
+    /**
+     * Substitute function - it'll work just for the 1st item
+     */
+    
+    extend public void substitute(str filter) {
+	if (!filter) {
+	    return;
+	}
+	if (filter == "All") {
+	    if (filters.count > 0)
+	      filters.remove(0);
+	}
+	
+	else
+	  filters[0] = filter;
+	
+	triggerChangeEvent();
+	//updateFilterButtons();
+    }
+}
+
+private class ExtensionMayusNameFilterDropDown extends DropDownTreeView {
+    public ExtensionMayusNameDropDownFilterLimb limb;
+    
+}
+
+
+/**
+  * treeViewAddCB
+ */
+public void treeViewAddCB(Control control) {
+    if (!control) {
+	return;
+    }
+    
+    if (DsFilterLimb limb = control.ExtensionMayusNameFilterDropDown.limb) {
+	AddButtonCB(control);
+    }
+}
+
+
+private SectionedLabel myAddSection(SectionedScrollableSubWindow sectionedScrollableSubWindow, Window w, str label, Color overrideColor=null, bool noLabel=false, str key=null, str tooltip=null) {
+    if (key) w.key = key;
+    assert(w.key);
+    sectionedScrollableSubWindow.order << w.key;
+    setTopmostWindow(w.hwnd, windowBound(w.hwnd).p0, windowZOrder.bottom);
+    
+    SectionedLabel z = myBuildLabel(sectionedScrollableSubWindow, label, w,
+				    overrideColor, tooltip);
+    
+    z.at(0, 0);
+    z.h = 20;
+    if (noLabel) {
+	z.noLabel = true;
+	z.h = 0;
+	z.preferedSize = 0;
+	z.smallSize = 0;
+    }
+    
+    setTopmostWindow(z.hwnd, windowBound(z.hwnd).p0, windowZOrder.bottom);
+    z.extendRight(1);
+    z.wkey = w.key;
+    
+    if (!sectionedScrollableSubWindow.firstLabel) sectionedScrollableSubWindow.firstLabel = z;
+    
+    return z;
+}
+
+private void AddButtonCB(Control control) {
+    if (!control) {
+	return;
+    }
+    
+    if (ExtensionMayusNameDropDownFilterLimb limb = control.ExtensionMayusNameFilterDropDown.?limb) {
+	
+	str filter = limb.treeView.anySelected().key;
+	limb.substitute(filter);
+
+	limb.filterWindow.autoSize();
+	limb.window.ToolboxSectionedScrollableSubWindow.updateSections();
+
+
+	
+    }
+}
+
+/**
+ * Build label - copied from core.
+ */
+private SectionedLabel myBuildLabel(SectionedScrollableSubWindow sectionedScrollableSubWindow, str label, Window w, Color overrideColor=null, str tooltip=null) {
+    color c;
+    
+    if (overrideColor)
+      c = overrideColor.v;
+    else
+      c = w.skin.dark.color.blended(w.skin.fg.color);
+    
+    Brush brush = SolidColorBrush(c);
+    return sectionedScrollableSubWindow.myBuildLabel(label, brush, tooltip);
+}
+
+ 
+/**
+ * Build label - copied from core.
+ */
+private SectionedLabel myBuildLabel(SectionedScrollableSubWindow sectionedScrollableSubWindow, str label, Brush brush, str tooltip=null) {
+    DsFilterSectionedLabel sectionedLabel(sectionedScrollableSubWindow,
+					  label=label,
+					  labelColor=color(48),
+					  margins=(30, 2),
+					  align=left,
+					  font=systemFont,
+					  brush=brush);
+    sectionedLabel.setToolTipText(tooltip);
+    return sectionedLabel;
+}
+
+public class ExtensionMayusNameNoNavDsDataCatalogLimb extends DsDataCatalogLimb {
+    
+    private int dsDataCatalogLimbMaxWindows = 3200;
+    
+    public void buildNavigator(SectionedScrollableSubWindow window,
+			       DataCatalog catalog,
+			       DsSqlImportActiveCatsInfo info=null) {
+	
+	return;
+	
+    }
+    
+    
+    public bool validSize() {
+	int windowCount = 0;
+	
+	if (info) {
+	    appendProductLevel(null, catalog, info, windowCount, dryRun=true);
+	} else {
+	    str->DsSqlImportActiveCatsInfo activeProductCatalogs =
+	      catalog.activeFilteredPrdCatalogs;
+	    
+	    for (key, productCatalog in activeProductCatalogs) {
+		appendProductLevel(null, catalog, productCatalog, windowCount,
+				   dryRun=true);
+	    }
+	}
+	
+	return (windowCount < dsDataCatalogLimbMaxWindows);
+    }
+    
+}

@@ -1,0 +1,189 @@
+
+extension.cm,372
+package custom.extensionnamemin;extensionnamemin36,1711
+private const str name 41,1776
+private const str secondTab 42,1819
+private class ExtensionMayusNameExtension extends UltraLazyExtension 48,1905
+package Image exImage(104,2979
+package Extension getExtension(115,3205
+package ExtensionId getExtensionId(123,3358
+package ExtensionInfo getExtensionInfo(135,3623
+
+header.cm,342
+package custom.extensionnamemin;extensionnamemin36,1706
+package const str schemeKey 38,1742
+public str selectedPricelist 40,1801
+package int portafolioId 42,1841
+package str catalogCode 43,1890
+package str enterpriseCode 44,1935
+package str versionNo 45,1983
+package str vendorCode 46,2013
+public const str[] allowedDomains 51,2118
+
+hybridIsoViewRect.cm,197
+package custom.extensionnamemin;extensionnamemin36,1706
+public class HybridIsoViewRect extends IsometricViewRect 41,1790
+public class HybridIsoImageHolder extends IsometricImageHolder 136,3872
+
+hybridSnapper.cm,323
+package custom.extensionnamemin;extensionnamemin36,1706
+public class HybridSnapper extends Model3DSnapper : abstract 39,1744
+public class MyItemTagInfo extends ItemTagInfo 722,16472
+public const str cMainData 734,16687
+public DsPData  extensionnameminGetData(739,16775
+public void  extensionnameminSetData(744,16988
+
+init.cm,102
+package custom.extensionnamemin;extensionnamemin36,1706
+public void initExtensionMayusName(42,1796
+
+library.cm,502
+package custom.extensionnamemin;extensionnamemin36,1711
+private Library cachedLibrary;42,1772
+package Library extensionnameminLibrary(48,1847
+private void showProjInfoCB(126,4593
+private color linkLabelColor 170,5858
+private void lLinkButtonCB(174,5944
+public class ExtensionMayusNamePicklist extends DsPicklist 188,6230
+private int desiredW 207,6635
+public class FOSnapperLimb extends SnapperLimb 209,6665
+public void updateLibAfterNewDB(233,7594
+public DsPData catalogCreateData(248,7828
+
+package.cm,1898
+use cm: basic,38,1755
+use cm: basic, io,38,1755
+use cm: basic, io, io.util,util38,1755
+use cm: basic, io, io.util, win,38,1755
+use cm: basic, io, io.util, win, geometry,38,1755
+use cm: basic, io, io.util, win, geometry, extension.util.lazy;lazy38,1755
+use cm.core: library;39,1820
+use cm: core,40,1843
+use cm: core, core3D;40,1843
+use cm.abstract;abstract41,1866
+use cm.abstract.dataSymbol;dataSymbol42,1884
+use cm.abstract.dataSymbol.properties;properties43,1913
+use cm.abstract.dataSymInterface;dataSymInterface44,1953
+use cm.application;application45,1988
+use cm.abstract.dataSymInterface.catalog;catalog46,2009
+use cm.abstract.office;office47,2052
+use cm.abstract.tools.elevations.isoView;isoView48,2077
+use cm.abstract.office.dataOffice;dataOffice49,2120
+use cm: geometry.advanced,advanced51,2158
+use cm: geometry.advanced, core.calc,calc51,2158
+use cm: geometry.advanced, core.calc, format.cm3D,cm3D51,2158
+use cm: geometry.advanced, core.calc, format.cm3D, core.cm3D,cm3D51,2158
+use cm: geometry.advanced, core.calc, format.cm3D, core.cm3D, draw;51,2158
+use cm: io.object;object52,2227
+use cm: core.material,material53,2247
+use cm: core.material, core.render;render53,2247
+use cm.format.xml;xml54,2284
+use cm.format.libxml2;libxml255,2304
+use cm.import.interop;interop56,2328
+use cm.core.propsScheme.layout;layout57,2352
+use cm.core.propsScheme;propsScheme58,2385
+use cm.abstract.dataSymbol.scheme.layout;layout59,2411
+use cm.format.cmsym;cmsym61,2456
+use cm.core.collabG3;collabG363,2480
+use cm.os;os65,2505
+use cm.abstract.projectInfo;projectInfo66,2517
+use cm: extension,71,2723
+use cm: extension, extension.util,util71,2723
+use cm: extension, extension.util, security,71,2723
+use cm: extension, extension.util, security, rs;71,2723
+use cm.core: search;72,2773
+use custom.extensionnamemin.secondTab;secondTab74,2797
+
+textSnapperLimb.cm,137
+package custom.extensionnamemin;extensionnamemin36,1706
+public class HybridSnapperImageButton extends LazyBasicSnapperButton 106,3616
+
+extension.xml,19
+<?xml version=1,0
+
+secondTab/catalogLettersProductNameMay.cm,120
+package custom.extensionnamemin.secondTab;secondTab36,1706
+public class ProductNameMay extends HybridSnapper 38,1752
+
+secondTab/enums.cm,61
+package custom.extensionnamemin.secondTab;secondTab36,1706
+
+secondTab/package.cm,1550
+package custom.extensionnamemin.secondTab;secondTab36,1706
+use custom.extensionnamemin;extensionnamemin38,1752
+use cm: basic,40,1784
+use cm: basic, io,40,1784
+use cm: basic, io, io.util,util40,1784
+use cm: basic, io, io.util, win,40,1784
+use cm: basic, io, io.util, win, geometry;40,1784
+use cm: core,41,1828
+use cm: core, core3D;41,1828
+use cm.abstract;abstract42,1851
+use cm.abstract.dataSymbol;dataSymbol43,1869
+use cm.abstract.dataSymbol.properties;properties44,1898
+use cm.abstract.dataSymInterface;dataSymInterface45,1938
+use cm.application;application46,1973
+use cm.abstract.dataSymInterface.catalog;catalog47,1994
+use cm.abstract.office;office48,2037
+use cm.abstract.tools.elevations.isoView;isoView49,2062
+use cm: geometry.advanced,advanced51,2107
+use cm: geometry.advanced, core.calc,calc51,2107
+use cm: geometry.advanced, core.calc, format.cm3D,cm3D51,2107
+use cm: geometry.advanced, core.calc, format.cm3D, core.cm3D,cm3D51,2107
+use cm: geometry.advanced, core.calc, format.cm3D, core.cm3D, draw;51,2107
+use cm: io.object;object52,2176
+use cm: core.material,material53,2196
+use cm: core.material, core.render;render53,2196
+use cm.format.xml;xml54,2233
+use cm.format.libxml2;libxml255,2253
+use cm.import.interop;interop56,2277
+use cm.abstract.projectInfo;projectInfo57,2301
+use cm: extension,63,2509
+use cm: extension, extension.util,util63,2509
+use cm: extension, extension.util, security,63,2509
+use cm: extension, extension.util, security, rs;63,2509
+use cm.core: search;64,2559
+
+secondTab/prdctFilteredLibraryLimb.cm,206
+package custom.extensionnamemin.secondTab;secondTab36,1706
+public class catalogLettersFilteredLimb extends LibraryLimb 42,1791
+public class catalogLettersFilteredSnapperLimb extends SnapperLimb 66,2686
+
+secondTab/prdctFilteredVisibility.cm,61
+package custom.extensionnamemin.secondTab;secondTab36,1706
+
+secondTab/prdctLibraryFilters.cm,403
+package custom.extensionnamemin.secondTab;secondTab36,1706
+public void createcatalogLettersCategoryTree(42,1790
+package void includedInDomain(67,2607
+package str filterLabelCB(96,3127
+package void extensionnameminCategUpdateCB(104,3282
+package void extensionnameminCollectUpdateCB(115,3572
+package TreeViewItem activeCategoryFilter(126,3790
+package TreeViewItem activeCollectionFilter(140,4146
+
+secondTab/productsHeader.cm,635
+package custom.extensionnamemin.secondTab;secondTab36,1706
+package TreeViewItem productsCategories;46,1975
+package const str extensionnameminallCateg 51,2053
+package const str[] extensionnameminCategories 53,2129
+package const str extensionnameminallCollect 58,2244
+package const str productnamemin 60,2324
+public ObjectSubSet extensionnameminCategDomain;65,2423
+public ObjectSubSet extensionnameminCollectDomain;66,2473
+package const str extensionnameminCategFilterKey 72,2562
+public const str stoolColorKey 82,2845
+public const str widthKey 88,2917
+public const str depthKey 94,2979
+public const str heightKey 100,3042
+
+secondTab/productsLibrary.cm,383
+package custom.extensionnamemin.secondTab;secondTab36,1706
+use cm.abstract.dataSymbol.ui.libraryBuilder;libraryBuilder38,1752
+use cm.os;os39,1799
+private Library cachedLibrary;45,1838
+package symbol pkg 51,1897
+package symbol pkgp 52,1930
+public Library productscatalogLettersLibrary(58,2026
+package void rebuildLibrary(127,4153
+private void layoutFilterGroupFk(143,4541

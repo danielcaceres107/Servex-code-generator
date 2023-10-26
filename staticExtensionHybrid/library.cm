@@ -1,0 +1,252 @@
+﻿/** Configura CET Source Copyright Notice (CETSC)
+
+   This file contains Configura CM source code and is part of the
+   Configura CET Development Platform (CETDEV). Configura CM
+   is a programming language created by Configura Sverige AB.
+   Configura, Configura CET and Configura CM are trademarks of
+   Configura Sverige AB. Configura Sverige AB owns Configura CET,
+   Configura CM, and CETDEV.
+
+   Copyright (C) 2004 Configura Sverige AB, All rights reserved.
+
+   You can modify this source file under the terms of the Configura CET
+   Source Licence Agreement (CETSL) as published by Configura Sverige AB.
+
+   Configura Sverige AB has exclusive rights to all changes, modifications,
+   and corrections of this source file. Configura Sverige AB has exclusive
+   rights to any new source file containing material from this source file.
+   A new source file based on this source file or containing material from
+   this source file has to include this Configura CET Source Copyright Notice
+   in its full content. All changes, modifications, and corrections mentioned
+   above shall be reported to Configura Sverige AB within One Month from
+   the date that the modification occurred.
+
+   Configura CM is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+   See the CETSL for more details.
+
+   You should have received a copy of the CETSL along with the CETDEV.
+   If not, write to Configura Sverige AB, Box 306, SE-581 02 Link�ping, Sweden.
+   Tel +46 13377800, Fax +46 13377855,
+   Email: info@configura.com, www.configura.com
+
+   END OF CETSC
+*/
+package custom.extensionnamemin;
+
+
+/**
+ * Library.
+ */
+private Library cachedLibrary;
+
+
+/**
+ * extensionnameminlibrary.
+ */
+package Library extensionnameminLibrary() {
+    if (!cachedLibrary or developMode) {
+        DsPData catalogData = catalogCreateData("");
+	symbol pkg = #:package;
+    
+	Library lib = library(pkg=pkg, companyKey="extensionnamemin") {
+
+	container LibraryLimb root("extensionnameminLibrary") {
+	
+	/**
+	 * Header
+	 */
+	limb HeaderLimb headerImage("headerImage", extendRight=false,
+				    compact=false, image=exImage("ExtensionHeader"), margins=(0, 0));
+	headerImage.forceText = "";
+	
+container LibraryLimb infoContainer("", null, label="ExtensionName") {
+
+		    limb HeaderLimb headerText_1("headerText_1", compact=false, margins=(10, 10), align=middle);
+		    headerText_1.forceText = "\nbrandText\n";
+		    
+		    limb HeaderLimb headerText_2("headerText_2", compact=false, margins=(80, 0), align=middle);
+		    headerText_2.forceText = " \n \nVisit our web page:";
+		    limb CustomLinkLimb customLink("url", link="https://email/", _m=(70, 5));
+		    
+		    limb HeaderLimb headerText_3("headerText_3", compact=false, margins=(98, 0), align=middle);
+		    headerText_3.forceText = " \n \nContact us at:";
+		    limb CustomLinkLimb phoneLink("phoneLink", link="tel:telefono", _m=(70, 2));
+
+		    limb HeaderLimb headerText_4("headerText_4", compact=false, margins=(110, 0), align=middle);
+		    headerText_4.forceText = " \n \nOur email:";
+		    limb CustomLinkLimb emailLink("emailLink", link="mailto:correo", _m=(65, 2));
+
+		}
+
+	        /**
+		 * Items
+		 */
+		LibraryLimb extrasCont(root, pkg, "extras");
+
+		//Picklist
+	        UIImageHint plistIcon(showLabel=true, exImage("picklist"), textSide=right);
+		SnapperLimb plist(extrasCont, pkg, "ExtensionMayusNamePicklist", hint=plistIcon, label="Picklist");
+
+	        NewlineHint(extrasCont);
+
+		//Project Info
+		UIImageHint uiProjInfo(showLabel=true, exImage("project_information.png"), textSide=right);
+		VoidCallbackLimb projInfo(extrasCont, pkg, "customerDataDialogLabel", uiProjInfo, callback=function showProjInfoCB);
+
+	        NewlineHint(extrasCont);
+
+		//Elevation
+		TextSnapperLimb iso(extrasCont, pkg, "HybridIsoViewRect",
+					image=exImage("elevation.png"), label=$isoviewsCategoryName);
+
+	        NewlineHint(extrasCont);
+
+		//Finish Legend
+		UIImageHint uiMatLegendHint(showLabel=true, image=exImage("materialLegend.png"), textSide=right);
+		FOSnapperLimb(extrasCont, "cm.abstract.dataSymbol.materialLegend", "DsMaterialLegendSnapper", uiMatLegendHint);
+	  }
+	};
+
+	cachedLibrary = lib;
+
+
+	cachedLibrary.keywordSearchRootPkg = #:package;
+	cachedLibrary.keywordSearchRootKey = "extensionnamemin";
+	//cachedLibrary.finalize();
+    }
+    
+    return cachedLibrary;
+}
+
+/**
+ * Show project info callback.
+ */
+private void showProjInfoCB() {
+    if (!autoCrashing) {
+	Window parent = application.?appWindow;
+	Url xml = cmFindUrl("custom/extensionnamemin/Project Info.xml");
+	if (parent.valid and xml.isReadable) {
+	    beginWaitCursor();
+	    projectInfoDialog(application.appWindow, xml);
+	    endWaitCursor();
+	} else ptrace("error".eAngry);
+    }
+}
+
+/**
+ * Custom link limb
+ */
+
+public class CustomLinkLimb extends LinkLimb {
+
+    private pointI m;
+    private pointI p;
+    private str link2;
+    private str toolTipText2;
+     public constructor(LibraryLimb parent, symbol pkg, str key, str link,
+			LibraryLimbVisibility vs=null,
+			str toolTipText=null, pointI _m=(0, 0), pointI _p=(0, -85)) {
+	 this.m = _m;
+	 this.p = _p;
+	this.link2 = link;
+	this.toolTipText2 = toolTipText ? getRs(toolTipText, pkg) : getRs(key # "Tip", pkg);
+	super(parent, pkg, key, null, vs, null);
+    }
+    /**
+     * Build
+     */
+     public Window build(Window window) {
+	 LinkLimbButton buttonA(window, key=longKey, label=label, frameStyle=noFrame, callback=function lLinkButtonCB, labelColor=linkLabelColor, margins=m, pos=p);
+	 if (buttonA) {
+	     buttonA.limb=this;
+	     buttonA.setToolTipText(toolTipText);
+	 }
+	 return buttonA;
+     }
+}
+
+private color linkLabelColor = color(0, 0, 100);
+/**
+ * Left button callback.
+ */
+private void lLinkButtonCB(Control c) {
+    if (c as LimbCallbackButton) {
+	VoidCallbackLimb limb = c.limb;
+	if (limb as CustomLinkLimb) {
+	    if (!autoCrashing) {
+		if (limb and limb.link2) openLocation(limb.link2);
+	    }
+	}
+    }
+}
+
+/**
+ * Extension name Picklist
+ */
+public class ExtensionMayusNamePicklist extends DsPicklist {
+    public constructor() {
+	name = "ExtensionName";
+    }
+
+    public void buildSideBarProps() {
+	if (!showSideBar) return;
+	this."inBuildSBProps" = true;
+	showDSVertSideBarProperties(this, showTypes=["PicklistName", "Material", "Options"], invalidate=true);
+	this."inBuildSBProps" = false;
+    }
+}
+
+
+
+/*
+* Finish Legend
+*/
+
+private int desiredW = 50;
+
+public class FOSnapperLimb extends SnapperLimb {
+    /**
+     * Build thyself.
+     */
+    public Window build(Window w) {
+    if (image !in MemoryImage and image !in Icon) return null;
+    SelectButton button;
+    str label = (hint and hint.showLabel) ? label() : null;
+    FrameStyle fs = hint.?preferFrameSyle ?? toolboxButtonFrameStyle;
+    pointI mg = hint ? hint.preferMargins : (2, 2);
+    alignment textSide = hint ? hint.preferTextSide : alignment.down;
+
+ 
+
+    button = SnapperImageButton(w, frameStyle=fs, snapperName=key, snapperPkg=pkg, label=label, image=image, align=left, textSide=textSide, margins=mg, src=#:src);
+    button.w = max(desiredW, button.w);
+    button.key = key;
+    button.setToolTipText(toolTipText() ?? getRs(this.key # "Tip", this.pkg));
+    button.setToolTipImage(toolTipImage);
+    return button;
+    }
+}
+
+// A new catalog db has been retrieved, update lib accordingly
+public void updateLibAfterNewDB(DsiDataCatalogs cats) {
+    if (cats)
+      //      pln(cats.key);
+    if (cats and cats._key == "catalogLetters") {
+        cachedLibrary = null;
+
+ 
+
+    }
+}
+
+/**
+ * Build ds data.
+ */
+
+public DsPData catalogCreateData(str pn) {
+    DsPData data(catalogCode, versionNo, enterpriseCode, vendorCode, pn);
+    //data.setActivePrdCatVersion();
+    return data;
+}

@@ -1,0 +1,174 @@
+/** Configura CET Source Copyright Notice (CETSC)
+
+   This file contains Configura CM source code and is part of the
+   Configura CET Development Platform (CETDEV). Configura CM
+   is a programming language created by Configura Sverige AB.
+   Configura, Configura CET and Configura CM are trademarks of
+   Configura Sverige AB. Configura Sverige AB owns Configura CET,
+   Configura CM, and CETDEV.
+
+   Copyright (C) 2004 Configura Sverige AB, All rights reserved.
+
+   You can modify this source file under the terms of the Configura CET
+   Source Licence Agreement (CETSL) as published by Configura Sverige AB.
+
+   Configura Sverige AB has exclusive rights to all changes, modifications,
+   and corrections of this source file. Configura Sverige AB has exclusive
+   rights to any new source file containing material from this source file.
+   A new source file based on this source file or containing material from
+   this source file has to include this Configura CET Source Copyright Notice
+   in its full content. All changes, modifications, and corrections mentioned
+   above shall be reported to Configura Sverige AB within One Month from
+   the date that the modification occurred.
+
+   Configura CM is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+   See the CETSL for more details.
+
+   You should have received a copy of the CETSL along with the CETDEV.
+   If not, write to Configura Sverige AB, Box 306, SE-581 02 Linköping, Sweden.
+   Tel +46 13377800, Fax +46 13377855,
+   Email: info@configura.com, www.configura.com
+
+   END OF CETSC
+*/
+package custom.extensionnamemin.secondTab;
+
+use cm.abstract.dataSymbol.ui.libraryBuilder;
+use cm.os;
+
+/**
+ * Library.
+ */
+
+private Library cachedLibrary;
+
+
+/**
+ * Package.
+ */
+package symbol pkg = #:package;
+package symbol pkgp = "custom.extensionnamemin.secondTab";
+
+
+/**
+ * Products library.
+ */
+public Library productscatalogLettersLibrary() {
+    if (!cachedLibrary or developMode) {
+
+	LibraryLimb root(pkg, "productscatalogLettersLibrary");
+
+	/**
+	 * Header.
+	 */
+	HeaderLimb header(root, pkg, "", extendRight=true, compact=false,
+			  image=exImage("Picture1"), align=middle);
+	header.forceText = "";
+   
+
+	/**
+	 * Filters.
+	 */
+	LayoutGroupLimb filters(root, pkg, "filters",
+				layout=function layoutFilterGroupFk);
+
+
+	/*
+	  SubSetCallbackLimb productsCategory(filters, pkg, "categoryFilter",
+					      callback=function extensionnameminCategUpdateCB,
+					      subset=extensionnameminCategDomain,
+					      initial=activeCategoryFilter);
+					      productsCategory.toLabelCB = function filterLabelCB;
+	*/
+
+	SubSetCallbackLimb productsCollection(filters, pkg, "collectionFilter",
+						callback=function extensionnameminCollectUpdateCB,
+						subset=collectionCatDomain,
+						initial=activeCollectionFilter);
+	productsCollection.toLabelCB = function filterLabelCB;
+	
+	
+	{
+
+	/*******************************************************************
+	 * ProductNameMay
+	 *******************************************************************/
+
+	/**
+	 * ProductName
+	 */
+	catalogLettersFilteredLimb productnamemin(root, pkg, "productnamemin", toolTipText=$productnamemin,
+				     tviCategory=activeCategoryFilter,
+				     tviCollection=activeCollectionFilter,
+				     all=collectionsall);
+
+
+	catalogLettersFilteredSnapperLimb hy_ProductNameMay(productnamemin, pkgp, "ProductNameMay",
+				      image=exImage("partnumber"), filterKeys=[categoryFilterKey],
+				      tviCategory=activeCategoryFilter,
+				      tviCollection=activeCollectionFilter,
+							 all=collectionsall, allCateg=categoriesall);
+
+
+	/****************** ADD New Products Here ****************/
+	}
+
+
+	//cachedLibrary = lib;
+	cachedLibrary = CompanyLibrary(root, pkg, companyKey="catalogLettersGroup");
+	cachedLibrary.keywordSearchRootPkg = pkg;
+	cachedLibrary.keywordSearchRootKey = "catalogLettersGroup";
+    }
+    
+    return cachedLibrary;
+}
+
+/**
+ * Rebuild library.
+ */
+package void rebuildLibrary() {
+    beginWaitCursor();
+    if (application.?toolbox) {
+	for (LazyLibraryCard card in application.toolbox.childWindows) {
+	    if (card.libraryFunctionPkg == pkg) {
+		cachedLibrary = null;
+		card.requestLazyRebuild(true);
+	    }
+	}
+    }
+    endWaitCursor();
+}
+
+/**}
+ * Layout function. Same as layout schemes group but w/o the buttons.
+ */
+private void layoutFilterGroupFk(Window w) {
+    if (!w) return;
+    int ct = w.childWindows.count;
+    Window[] labels();
+    Window[] dropdowns();
+
+    int maxL;
+    int maxD = 200;
+
+    while (int i=0; i < ct; i += 1) {
+	Window sub = w.childWindows[i];
+	Window lbl = sub.childWindows[0];
+	Window dd = sub.childWindows[0];
+	labels << lbl;
+	dropdowns << sub.childWindows[1];
+	maxL = max(lbl.w, maxL);
+	maxD = max(dd.w, maxD);
+    }
+
+    while (int i=0; i < ct; i += 1) {
+	labels[i].w = maxL;
+	dropdowns[i].w = maxD;
+	dropdowns[i].rightOf(labels[i]);
+	labels[i].parent.autoSize();
+    }
+    w.autoSize();
+    w.finalize();
+}

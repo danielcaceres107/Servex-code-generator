@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<extension-info>
+  <name>ExtensionName</name>
+  <version>14.0.0.0</version>
+  <type>catalog</type>
+  <unsupported-platforms />
+  <main>custom.extensionnamemin</main>
+  <packages>
+    <package id="custom.extensionnamemin" />
+  </packages>
+  <extension-dependencies>
+    <dependency id="cet.designer" />
+  </extension-dependencies>
+  <security-delegates>
+    <delegate id="cet.designer" />
+  </security-delegates>
+</extension-info>

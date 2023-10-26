@@ -13,13 +13,16 @@ def generate(tipo_extension_seleccionado, codigo_catalogo, id_catalogo, catalog_
     catalog_name_min = catalog_name.lower().replace(" ", "")
     catalog_name_may = catalog_name_min.capitalize()
 
+    # Obtener la ubicación del script actual
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+
     #elegir carpeta estatica segun tipo de extension
 
     if tipo_extension_seleccionado == "shell":
-        carpeta = r'C:\CetDev\version14.0\extensions\custom\staticExtension'
+        carpeta = os.path.join(script_dir, "staticExtensionShell")
 
     if tipo_extension_seleccionado == "hybrid":
-        carpeta = r'C:\CetDev\version14.0\extensions\custom\staticExtension2'
+        carpeta = os.path.join(script_dir, "staticExtensionHybrid")
 
 
     nueva_carpeta = r'C:\CetDev\version14.0\extensions\custom\%s' % catalog_name_min
@@ -30,8 +33,6 @@ def generate(tipo_extension_seleccionado, codigo_catalogo, id_catalogo, catalog_
 
     # Copiar la carpeta existente a la nueva carpeta
     shutil.copytree(carpeta, nueva_carpeta)
-
-    #TO-DO: hacer que las rutas sean dinamicas para donde quiera que se ejecute el script(?)
 
     # crea una lista de los archivos y subdirectorios dentro de la carpeta
     contenido_carpeta = os.listdir(nueva_carpeta)

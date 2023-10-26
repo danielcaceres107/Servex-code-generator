@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lazy-extension-info>
+  <main id="custom.extensionnamemin" />
+  <quickBar>
+    <id>custom.extensionnamemin-all@predefined</id>
+    <label>ExtensionName</label>
+  </quickBar>
+  <toolboxes>
+    <toolbox>
+      <package>custom.extensionnamemin</package>
+      <function>extensionnameminLibrary</function>
+      <label>ExtensionName</label>
+      <sortKey>custom.extensionnamemin#0000</sortKey>
+      <configId>custom.extensionnamemin-all@predefined</configId>
+    </toolbox>
+    <toolbox>
+      <package>custom.extensionnamemin.secondTab</package>
+      <function>productscatalogLettersLibrary</function>
+      <label>catalogLetters Products</label>
+      <sortKey>custom.extensionnamemin.secondTab#0001</sortKey>
+      <configId>custom.extensionnamemin-all@predefined</configId>
+    </toolbox>
+    <!--generateNewToolbox-->
+  </toolboxes>
+</lazy-extension-info>

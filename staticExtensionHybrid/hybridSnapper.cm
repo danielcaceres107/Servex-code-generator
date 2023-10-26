@@ -1,0 +1,751 @@
+/** Configura CET Source Copyright Notice (CETSC)
+
+   This file contains Configura CM source code and is part of the
+   Configura CET Development Platform (CETDEV). Configura CM
+   is a programming language created by Configura Sverige AB.
+   Configura, Configura CET and Configura CM are trademarks of
+   Configura Sverige AB. Configura Sverige AB owns Configura CET,
+   Configura CM, and CETDEV.
+
+   Copyright (C) 2004 Configura Sverige AB, All rights reserved.
+
+   You can modify this source file under the terms of the Configura CET
+   Source Licence Agreement (CETSL) as published by Configura Sverige AB.
+
+   Configura Sverige AB has exclusive rights to all changes, modifications,
+   and corrections of this source file. Configura Sverige AB has exclusive
+   rights to any new source file containing material from this source file.
+   A new source file based on this source file or containing material from
+   this source file has to include this Configura CET Source Copyright Notice
+   in its full content. All changes, modifications, and corrections mentioned
+   above shall be reported to Configura Sverige AB within One Month from
+   the date that the modification occurred.
+
+   Configura CM is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+   See the CETSL for more details.
+
+   You should have received a copy of the CETSL along with the CETDEV.
+   If not, write to Configura Sverige AB, Box 306, SE-581 02 Linköping, Sweden.
+   Tel +46 13377800, Fax +46 13377855,
+   Email: info@configura.com, www.configura.com
+
+   END OF CETSC
+*/
+package custom.extensionnamemin;
+
+
+public class HybridSnapper extends Model3DSnapper : abstract {
+
+    public str catCode = "catalogLetters" ;
+    public str catVersion = "1";
+    public str enterpriseCode = "catalogLetters";
+
+                                                                                                      
+     /**
+     *PartNumber
+     */
+    public str pn;
+
+
+    /**
+     *Dimensions
+     */
+
+    public double w;
+    public double d;
+    public double h;
+    
+
+    /**
+     * Stretch Connectors
+     */
+    public ConnectPoint widthStretch;
+    public ConnectPoint heightStretch;
+    public ConnectPoint depthStretch;
+
+
+    /**
+     * Constructor.
+     */
+    public constructor() {
+	super();
+	propDefs();
+	initialize();
+	initDimensions();
+	initConnectors();
+    }
+
+     /***********************************************************************
+     * Data
+     ***********************************************************************/
+
+    /**
+     * Returns string width to add to partnumber
+     */
+    extend public str wStr() {
+	return widthDomain.closest(w).double.inchesS(showUnit=false);
+    }
+
+
+    /**
+     * Returns string depth to add to partnumber
+     */
+    extend public str dStr() {
+	return depthDomain.closest(d).double.inchesS(showUnit=false);
+    }
+
+    /**
+     * Returns string depth to add to partnumber
+     */
+    extend public str hStr() {
+	return heightDomain.closest(h).double.inchesS(showUnit=false);
+    }
+
+
+    /**
+     * Prop key constant for prop def providing generic access directly to 
+     * our main PData (it's actually stored in a sub-object rather than
+     * directly on us), which more importantly acts as a pipe key for prop
+     * defs exposed from it.
+     */
+    final public str cMainPDataProp() : inline {
+	return "data";
+    }
+
+    /***********************************************************************
+     * Mirror
+     ***********************************************************************/
+    public bool allowMirror() {
+	return true;
+    }
+    /***********************************************************************
+     * Props
+     ***********************************************************************/
+
+    /**
+     * Prop defs.
+     */
+    public props : cached=true {
+	/**
+	 * Construct.
+	 */
+	construct {
+	    if (!getData()) initData();
+	}
+	
+	/**
+	 * Prop for accessing our main PData despite it not being stored
+	 * directly on us (it's in a multidata).
+	 * 'exposed=true' results in all defs on our main data being 
+	 * exposed on this.
+	 */
+	DsPData cMainPDataProp : exposed=true {
+	    Object get(PropObj z, Object env=cMainData) {
+		if (env !in Str) env = cMainData;
+		return that.getData(env.str);
+	    }
+	    void put(PropObj z, Object v, Object env=cMainData) {
+		if (env !in Str) env = cMainData;
+		if (v as DsPData) {
+		    that.putData(v, env.str);
+		    return;
+		}
+	    }
+	}
+    }
+
+
+    /**
+     * Using G2?
+     */
+    public bool usingG2() { return true; }
+
+    
+    /***********************************************************************
+     * Initialize
+     ***********************************************************************/
+    
+    /**
+     * Initialize().
+     */
+    final public void initialize() {
+	if (!getData()) {
+	    initData();
+	    exposePropDefs(cMainPDataProp);
+	}
+    }
+
+
+    /**
+     * Init the data.
+     */
+    final public void initData() {
+	resetData();
+	/** Subclass */
+    }
+
+        
+    /**
+     * Clear cached bound.
+     */
+    final public void clearCachedBound() {
+        /** Subclass */
+    }
+
+
+    /**
+     * Ensure settings.
+     */
+    public void ensureSettings() {
+	exposePropDefs(cMainPDataProp);
+	super();
+    }
+   
+    /**
+     * Push props from 'z' to this if applicable.
+     */
+    public bool pushProps(PropObj z, Object env=null, StrBuf error=null, bool applicator=false) {
+	bool res = super(..);
+	if (res) build2D();
+	return res;
+    }
+
+
+    /**
+     * Manipulate input setting.
+     */
+    public void manipulateInputSetting(str key, PropInputSetting setting, PropDef def) {
+	super(..);
+	if (def and def.pipeKey == cMainPDataProp and setting.attributes.any)
+	  setting.attributes += {#insert};
+    }
+
+
+    /**
+     * Append prop defs.
+     */
+    public void appendPropDefs(PropDefs defs) {
+	super(..);
+	dsAddPropagateProperties(..);
+    }
+
+    /***********************************************************************
+     * Data
+     ***********************************************************************/
+
+    /**
+     * Get data.
+     */
+    extend public DsPData getData(str key=cMainData) {
+	return extensionnameminGetData(key);
+    }
+
+
+    /**
+     * Clear data.
+     */
+    extend public void clearData(str key) {
+	if (DsMultiPData multiData = getMultiData()) {
+	    multiData.propData.remove(key);
+	}
+    }
+
+
+    /**
+     * Get data.
+     */
+    extend public DsMultiPData getMultiData() {
+	return get(cDsMPDataProp).DsMultiPData;
+    }
+
+     
+    /**
+     * Add new data.
+     */
+    extend public void putData(DsPData data, str key=cMainData) {
+         extensionnameminSetData(data, key);
+    }
+
+    
+    /**
+     * The catalog product that mathes the data.
+     */
+    extend public DsProductType dataProduct() {
+	if (DsPData data = getData()) return data.styleProduct();
+	return null;
+    }
+
+
+    /**
+     * Partnumber
+     */
+    extend public str partNumber() : abstract { }
+
+    
+    /**
+     * Create DsPData
+     */
+    extend public DsPData createData(str partNumber) {
+	DsPData res(catCode, catVersion, enterpriseCode, partNumber);
+	res.setActivePrdCatVersion();
+	res.setDefaultSelOptions();
+	return res;
+    }
+
+    /**
+     * NEW Reset the DsPData.
+     */
+    extend public void resetData() {
+	str pn = partNumber();
+	if (syncData(this, pn)) {
+	    if (!(animation and (animation.isDragAnimation or
+				 animation.isInsertAnimation))) {
+		if (this in space.?selection.snappers)
+		  space.invalidateSelection;
+	    }
+	    protectBoundChange(this) {
+		updateConnectors();
+		diffRebuildCoreProperties();
+		invalidate(dirty2D.rebuild);
+	    }
+	} else {
+	    putData(createData(pn));
+	}
+    }
+    
+    /**
+     * Reset the DsPData.
+     * 
+     * Return true if we found data to reset.
+     */
+    extend public bool syncData(PropObj owner, str pn) {
+	if (DsPData data = getData()) {
+	    ?int->DsiPDataOption opts = data."lastValidOptions";
+	    if (!data.dataCatalog.?product(pn)) {
+		if (!opts) data."lastValidOptions" = data.selOptions;
+		
+	    } else if (opts) {
+		data.selOptions = opts;
+		data."lastValidOptions" = null;
+	    }
+	    
+	    setPartNumberForData(owner, data, pn);
+	    ownerReExposePropDefs(recursive=true);
+	    
+	    return true;
+	}
+	
+	return false;
+    }
+    
+
+     /**
+     * Add system categories.
+     */
+    public void addSystemCategoriesTo(symbol{} categories) {
+	if (DsPData data = getData())
+	  data.?addSystemCategoriesTo(categories);
+	categories << dsDataSymbolLayer;
+    }
+
+
+    extend public void setPropsStr(){}
+
+    
+
+    /***********************************************************************
+     * Graphics
+     ***********************************************************************/
+
+    
+    /**
+     * Build 3D
+     */
+    public void build3D(FetchEnv3D env) {
+	//	env.detail = detailLevel.super;
+	if (DsPData data = getData()) {
+	    Primitive3D my3D = data.get3D(this, env);
+	    this.model = Instance3D(my3D, this);
+	}
+	super(..);
+    }
+
+
+    /**
+     * Build 2D
+     */
+     public void build2D() {
+	GInstance allGraphs();
+	if (DsPData data = getData()) {
+	    allGraphs << data.build2D(this);
+	}
+	boundGraph = GRect(localBound().rect);
+
+	graph = allGraphs;
+
+     }
+
+     /**
+     * Return desired detail levels.
+     */
+    public detailMask detailMask() {
+    return detailMask(low=true, medium=true, high=true, xsuper=true);
+    }
+
+
+      /***********************************************************************
+     * Connectors
+     ***********************************************************************/
+
+    /**
+     * Connectors
+     */
+    public void connectors(ConnectorCollection connectors) {
+
+	if (allowWidthStretch)
+	  connectors <<? widthStretch;
+	if (allowHeightStretch)
+	  connectors <<? heightStretch;
+	if (allowDepthStretch)
+	  connectors <<? depthStretch;
+	super(..);
+    }
+
+
+    /**
+     * Init connectors
+     */
+    extend public void initConnectors() {
+	widthStretch = TransformSnapPoint(this, posWConnector(), widthGrades(), null);
+	heightStretch = TransformSnapPoint(this, posHConnector(), heightGrades(), null);
+	depthStretch = TransformSnapPoint(this, posDConnector(), depthGrades(), null);
+    }
+
+
+    /**
+     * Update Connectors
+     */
+    public void updateConnectors() {
+	super();
+	widthStretch.setPos(posWConnector());
+	heightStretch.setPos(posHConnector());
+	depthStretch.setPos(posDConnector());
+    }
+
+
+    /**
+     * w Connector Position
+     */
+    extend public point posWConnector() {
+	 return (w + 5inch, d/2,  h);
+    }
+
+
+     /**
+     * D Connector Position
+     */
+    extend public point posDConnector() {
+
+	 return (w/2, -d,  h);
+	 
+    }
+
+
+     /**
+     * H Connector Position
+     */
+    extend public point posHConnector() {
+	return (w/2, d/2,  h+2inch);
+    }
+
+
+    /**
+     * Connectors orientations
+     */
+    extend public orientation widthGrades() {
+	return (0deg, 0deg, 0deg);
+    }
+
+
+    /**
+     * D orientation
+     */
+    extend public orientation depthGrades() {
+	 return (-90deg, 0deg, 0deg);
+    }
+
+
+    /**
+     * H orientation
+     */
+    extend public orientation heightGrades() {
+	 return (0deg, -90deg, 0deg);
+    }
+
+
+    /**
+     * Allow Height Connector
+     */
+    extend public bool allowHeightStretch() {
+	return heightDomain().count > 1;
+    }
+    
+
+    /**
+     * Allow Depth Connector
+     */
+    extend public bool allowDepthStretch() {
+	return depthDomain().count > 1;
+    }
+
+
+    /**
+     * Allow Height Connector
+     */
+    extend public bool allowWidthStretch() {
+	return widthDomain().count > 1;
+    }
+
+
+    /**
+     * Is the connector stretchable?
+     */
+    public bool stretchable(Connector mySnap) {
+	if (mySnap == widthStretch or mySnap == heightStretch or mySnap == depthStretch)
+	  return true;
+
+	return super(..);
+    }
+
+
+    /**
+     * Stretch
+     */
+    public bool stretch(Connector mySnap, point mousePos, AnimationMouseInfo mouseInfo) {
+
+	if (mySnap == widthStretch) {
+	    double newWidth = mousePos.x;
+	    ?newWidth = widthDomain.closest(newWidth);
+
+	    if (newWidth != w) {
+		w = newWidth;
+		updateWidth();
+		resetData();
+		updateConnectors();
+	    }
+	}
+	if (mySnap == heightStretch) {
+	    double newHeight = mousePos.z;
+	    ?newHeight = heightDomain.closest(newHeight);
+
+	    if (newHeight != h) {
+		h = newHeight;
+		updateHeight();
+		resetData();
+		updateConnectors();
+	    }
+	}
+	if (mySnap == depthStretch) {
+	    double newDepth = -mousePos.y;
+	    ?newDepth = depthDomain.closest(newDepth);
+
+	    if (newDepth != d) {
+		d = newDepth;
+		updateDepth();
+		resetData();
+		updateConnectors();
+	    }
+	}
+
+	return super(..);
+    }
+
+
+    /***********************************************************************
+     * Domains
+     ***********************************************************************/
+
+    /**
+     * Width Domain
+     */
+    extend public SubSet widthDomain() {
+	return DoubleEnum();
+    }
+
+
+    /**
+     * Height Domain
+     */
+    extend public SubSet heightDomain() {
+	return DoubleEnum();
+    }
+
+
+    /**
+     * Depth Domain
+     */
+    extend public SubSet depthDomain() {
+	return DoubleEnum();
+    }
+
+
+    /***********************************************************************
+     * Dimensions
+     ***********************************************************************/
+
+    /**
+     * LocalBound
+     */
+    public box localBound() {
+	if (DsPData d = getData())
+	  return d.localBound(this);
+	return box();
+    }
+
+    /**
+     * Init Dimesions
+     */
+    extend public void initDimensions() {
+	w = widthDomain.first.safeDouble;
+	h = heightDomain.first.safeDouble;
+	d = depthDomain.first.safeDouble;
+    }
+
+
+    /**
+     * Update Width
+     */
+    extend public void updateWidth() { }
+
+
+    /**
+     * Update Height
+     */
+    extend public void updateHeight() { }
+
+
+    /**
+     * Update Depth
+     */
+    extend public void updateDepth() { }
+
+
+    /***********************************************************************
+     * Parts
+     ***********************************************************************/
+
+    /**
+     * Tool tip text.
+     */
+    public str toolTipText() {
+	if (DsPData data = getData()) {
+	    if (DsProductType prod = data.styleProduct()) {
+		StrBuf buf();
+		buf << "Company: " << "extensionnamemin" << ".\n";
+		buf << "Part Number: " << prod.code << ".\n";
+		buf << "Description: " << prod.description() << ".\n";
+
+		return buf.toS();
+	    }
+	}
+	
+	return super();
+    }
+
+    /**
+     * Get parts
+     */
+    public void getParts(PartsEnv env, Snapper{} visited) {
+	if (DsPData data = getData()) {
+	    data.getParts(this, env);
+	}
+    }
+
+    /**
+     * Get Tags
+     */
+    extend public <PartTag, PartTag, PartTag> getPartTags(PartTagCategory[] partCategories, PartTagList list) {
+    PartTag t1;
+    PartTag t2;
+    PartTag t3;
+    for (partCat in partCategories) {
+	bool isTag1 = false;
+	bool isTag2 = false;
+	bool isTag3 = false;
+	if (partCat.label == "TAG1") {
+	    isTag1 = true;
+	} else if (partCat.label == "TAG2") {
+	    isTag2 = true;
+	} else if (partCat.label == "TAG3") {
+	    isTag3 = true;
+	}
+	if (isTag1 or isTag2 or isTag3) {
+	    PartTag pt = list.?value(partCat);
+	    if (isTag1) {
+		t1 = pt;
+	    } else if (isTag2) {
+		t2 = pt;
+	    } else if (isTag3) {
+		t3 = pt;
+	    }
+	}
+    }
+    return <t1, t2, t3>;
+    }
+    
+    
+    /**
+     * Accept item tags.
+     */
+    public bool acceptItemTags() {
+	return true;
+    }
+
+    public point itemTagPos(ItemTag tag) {
+	return localBound.center - point(0 , localBound.d/1.6, 0);
+    }
+
+    public ItemTagInfo createItemTagInfo(Part part, str itemTagKey, str itemTagInfoKey) {
+	if (DsPData data = getData()) {
+	    MyItemTagInfo iTag(data.partNumber, itemTagKey);
+	    return iTag;
+	}
+	return null;
+    }
+
+   
+}
+
+
+public class MyItemTagInfo extends ItemTagInfo {
+
+    /**
+     * The layer the text should be shown in drawing.
+     */
+    public LayerExpr layer() { return layer(#tags); }
+
+}
+
+/**
+ * Main DspData.
+ */
+public const str cMainData = "main";
+
+/**
+ * Get/Set DsPData from any snapper.
+ */
+public DsPData  extensionnameminGetData(PropObj z, str key=cMainData) {
+    if (DsMultiPData mData = z.get(cDsMPDataProp).DsMultiPData)
+      return mData.getD(key);
+    return z.get(cDsPDataProp).DsPData;
+}
+public void  extensionnameminSetData(PropObj z, DsPData data, str key=cMainData) {
+    DsMultiPData mData = z.get(cDsMPDataProp).DsMultiPData;
+    if (!mData) {
+	mData = DsMultiPData();
+	z.put(cDsMPDataProp, mData);
+    }
+    mData.putD(key, data);
+}

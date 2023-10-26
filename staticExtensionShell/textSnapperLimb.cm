@@ -1,0 +1,163 @@
+/** Configura CET Source Copyright Notice (CETSC)
+
+   This file contains Configura CM source code and is part of the
+   Configura CET Development Platform (CETDEV). Configura CM
+   is a programming language created by Configura Sverige AB.
+   Configura, Configura CET and Configura CM are trademarks of
+   Configura Sverige AB. Configura Sverige AB owns Configura CET,
+   Configura CM, and CETDEV.
+
+   Copyright (C) 2004 Configura Sverige AB, All rights reserved.
+
+   You can modify this source file under the terms of the Configura CET
+   Source Licence Agreement (CETSL) as published by Configura Sverige AB.
+
+   Configura Sverige AB has exclusive rights to all changes, modifications,
+   and corrections of this source file. Configura Sverige AB has exclusive
+   rights to any new source file containing material from this source file.
+   A new source file based on this source file or containing material from
+   this source file has to include this Configura CET Source Copyright Notice
+   in its full content. All changes, modifications, and corrections mentioned
+   above shall be reported to Configura Sverige AB within One Month from
+   the date that the modification occurred.
+
+   Configura CM is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+   See the CETSL for more details.
+
+   You should have received a copy of the CETSL along with the CETDEV.
+   If not, write to Configura Sverige AB, Box 306, SE-581 02 Linköping, Sweden.
+   Tel +46 13377800, Fax +46 13377855,
+   Email: info@configura.com, www.configura.com
+
+   END OF CETSC
+*/
+package custom.extensionnamemin;
+
+
+public class TextSnapperLimb extends SnapperLimb {
+    /**
+     * Text offset
+     */
+    public int txtOffset;
+    
+    
+    /**
+     * Create a new limb and register parent-child relation.
+     */
+    public constructor(LibraryLimb parent, symbol pkg, str key, UIHint hint=null,
+		       LibraryLimbVisibility vs=null, Image image=null,  str label=null,
+		       str toolTipText=null, Image toolTipImage=null, bool keywordHidden=false,
+		       int offset=6) {
+	super(parent, pkg, key, hint, vs, image, label, toolTipText, toolTipImage, keywordHidden);
+	txtOffset = offset;
+    }
+
+     
+    /**
+     * Build the Limb.
+     */
+    public Window build(Window window) {
+	SelectButton button = buildComponentLimb(this, window);
+	if (button) {
+	    button.setToolTipText(getRs(this.key # "Tip", this.pkg));
+	    button.autoSize();
+	}
+	return button;
+    }
+
+
+    /**
+     * Build component limb.
+     */
+    extend public SelectButton buildComponentLimb(ComponentLimb limb, Window window) {
+	SelectButton button;
+
+	limb.hint = UIHint(showLabel=true);
+	str label = limb.hint ? limb.label() : null;
+
+	if (limb as TextSnapperLimb) {
+	    if (limb.image in MemoryImage) {
+		button = snapperImage(window, limb.key, limb.pkg, label, limb.image, limb.hint, offset=txtOffset);
+	    }
+	}
+	return button;
+    }
+
+
+    /**
+     * Snapper image button.
+     */
+    final private SelectButton snapperImage(Window window, str name, symbol pkg, str label, Image image,
+					    UIHint hiLazySnapper3DMemoryButtonnt,
+					    int offset=6) {
+	FrameStyle fs = toolboxButtonFrameStyle;
+	return HybridSnapperImageButton(window, frameStyle=fs, snapperPkg=pkg, snapperName=name,
+				     label=label, textSide=right,
+				     image=image, align=middle, offset=offset);
+    }
+}
+
+/**
+ * Snapper image button. 
+ * Adds an offset.
+ */
+public class HybridSnapperImageButton extends LazyBasicSnapperButton {
+    /**
+     * Create a new SnapperImageButton.
+     */
+    public constructor(Window parent,
+		       // inherited key arguments
+		       Font font=controlFont,
+		       Brush brush=null,
+		       FrameStyle frameStyle=pushButtonFrame,
+		       frame3DState frameState=frameStateDown,
+		       pointI pos=(0, 0),
+		       sizeI size=(-1, -1),
+		       pointI margins=(2, 2),
+		       alignment align=up,
+		       ControlGroup group=null,
+		       function (Control control) callback=null,
+		       str label=null,
+		       color labelColor=color(0, 0, 0),
+		       bool threeState=false,
+		       symbol snapperPkg=null,
+		       str snapperName=null,
+		       // extends arguments
+		       alignment textSide=up,
+		       Image image=null,
+		       int offset = 6) {
+	super(parent,
+	      font=font,
+	      brush=brush ? brush : skin.control,
+	      frameStyle=frameStyle,
+	      frameState=frameState,
+	      pos=pos,
+	      size=size,
+	      margins=margins,
+	      align=align,
+	      group=group,
+	      callback=callback,
+	      label=label,
+	      labelColor=labelColor,
+	      threeState=threeState,
+	      snapperPkg=snapperPkg,
+	      snapperName=snapperName,
+	      image=label.empty ? image : null);
+	
+	if (label.empty) {
+	    ImagePainter imagePainter(winPainter);
+	    imagePainter.setImage(image);
+	    winPainter = imagePainter;
+	} else {
+	    ImagePainter imagePainter(winPainter);
+	    imagePainter.setImage(image);
+	    ComboTextPainter comboPainter(winPainter.LabelPainter, imagePainter);
+	    comboPainter.setTextSide(textSide);
+	    comboPainter.setAlignment(align);
+	    comboPainter.setTextOffset(offset);
+	    winPainter = comboPainter;
+	}
+    }
+}

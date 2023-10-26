@@ -1,0 +1,158 @@
+﻿/** Configura CET Source Copyright Notice (CETSC)
+
+   This file contains Configura CM source code and is part of the
+   Configura CET Development Platform (CETDEV). Configura CM
+   is a programming language created by Configura Sverige AB.
+   Configura, Configura CET and Configura CM are trademarks of
+   Configura Sverige AB. Configura Sverige AB owns Configura CET,
+   Configura CM, and CETDEV.
+
+   Copyright (C) 2004 Configura Sverige AB, All rights reserved.
+
+   You can modify this source file under the terms of the Configura CET
+   Source Licence Agreement (CETSL) as published by Configura Sverige AB.
+
+   Configura Sverige AB has exclusive rights to all changes, modifications,
+   and corrections of this source file. Configura Sverige AB has exclusive
+   rights to any new source file containing material from this source file.
+   A new source file based on this source file or containing material from
+   this source file has to include this Configura CET Source Copyright Notice
+   in its full content. All changes, modifications, and corrections mentioned
+   above shall be reported to Configura Sverige AB within One Month from
+   the date that the modification occurred.
+
+   Configura CM is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+   See the CETSL for more details.
+
+   You should have received a copy of the CETSL along with the CETDEV.
+   If not, write to Configura Sverige AB, Box 306, SE-581 02 Link�ping, Sweden.
+   Tel +46 13377800, Fax +46 13377855,
+   Email: info@configura.com, www.configura.com
+
+   END OF CETSC
+*/
+package custom.extensionnamemin;
+
+/**
+ * Extension name
+ */
+private const str name = "ExtensionName";
+private const str secondTab = "Products";
+
+
+/**
+ * ExtensionName extension.
+ */
+private class ExtensionMayusNameExtension extends UltraLazyExtension {
+    /**
+     * Initialize.
+     */
+    public void initialize(ExtensionEnv env) {
+	super(env);
+	init();
+    }
+
+    /**
+     * Start.
+     */
+    public void start(ExtensionEnv env) {
+	super(env);
+	//GenerateStart
+    }
+
+
+    /**
+     * Stop.
+     */
+    public void stop(ExtensionEnv env) {
+	super(env);
+    }
+
+     /**
+     * Build libraries.
+     */
+    public LazyLibraryInfo[] buildLibraries(ExtensionEnv env) {
+	LazyLibraryInfo[] libs();
+	
+	libs << LazyLibraryInfo(name,
+				#:package,
+				"extensionnameminLibrary",
+				sortkey="custom.extensionnamemin#0000");
+	libs << LazyLibraryInfo(secondTab,
+				#"custom.extensionnamemin.secondTab",
+				"productscatalogLettersLibrary",
+				sortkey="custom.extensionnamemin.secondTab#0001");
+	
+	return libs;
+	}
+
+
+    /**
+     * Init.
+     */
+    final private void init() {
+        safeLoadRs(cmFindUrl("custom/extensionnamemin/localize.rs"));
+    }
+}
+
+
+/**
+ * Get image included in this extension
+ */
+package Image exImage(str image) {
+    symbol k = #:package;
+    putIconDbExtensionDir(k, "custom/extensionnamemin/images/");
+    return icon(image, k);
+}
+
+
+
+/**
+ * Actual extension (dont change function name).
+ */
+package Extension getExtension() : referred {
+    return ExtensionMayusNameExtension();
+}
+
+
+/**
+ * Extension id (dont change function name).
+ */
+package ExtensionId getExtensionId() : encrypted, referred {
+    ExtensionId extensionId(#"custom.extensionnamemin", "ExtensionName");
+    //generateExtensionId
+    return extensionId;
+}
+
+
+
+
+/**
+ * Actual extension info (dont change function name).
+ */
+package ExtensionInfo getExtensionInfo() : referred {
+    ExtensionInfo info = loadExtensionInfoFromXml(#:package);
+
+    // All files that are to be shipped with the extension are added to this sequence.
+    Url[] files();
+    files << cmNative("custom/extensionnamemin/lazy.xml");
+    files << cmNative("custom/extensionnamemin/localize.rs"); // localize.rs contains your localized strings
+    files << cmNative("custom/extensionnamemin/*.png");
+    files << cmNative("custom/extensionnamemin/images/*.png");
+    files << cmNative("custom/extensionnamemin/secondTab/*.png");
+    files << cmNative("custom/extensionnamemin/secondTab/*.jpg");
+    files << cmNative("custom/extensionnamemin/secondTab/*.rs");
+    info.filesToInclude = files;
+
+    return info;
+}
+
+
+/**
+ * Build it!
+*/
+{
+    autoBuildExtension(#:package);
+}
