@@ -25,7 +25,7 @@ def generate(tipo_extension_seleccionado, codigo_catalogo, id_catalogo, catalog_
         carpeta = os.path.join(script_dir, "staticExtensionHybrid")
 
 
-    nueva_carpeta = r'C:\CetDev\version14.0\extensions\custom\%s' % catalog_name_min
+    nueva_carpeta = r'C:\CetDev\version15.0\extensions\custom\%s' % catalog_name_min
 
     # Verificar si la carpeta nueva ya existe
     if os.path.exists(nueva_carpeta):
@@ -56,16 +56,16 @@ def generate(tipo_extension_seleccionado, codigo_catalogo, id_catalogo, catalog_
 
 
         ###### modificar extension.cm ... ######
-        if ruta_archivo == r"C:\CetDev\version14.0\extensions\custom\%s\extension.cm" % catalog_name_min:
+        if ruta_archivo == r"C:\CetDev\version15.0\extensions\custom\%s\extension.cm" % catalog_name_min:
             changeLine(ruta_archivo, "//generateExtensionId", extension_id)
 
         ##### modificar Header.cm ######
-        if ruta_archivo == r"C:\CetDev\version14.0\extensions\custom\%s\header.cm" % catalog_name_min:
+        if ruta_archivo == r"C:\CetDev\version15.0\extensions\custom\%s\header.cm" % catalog_name_min:
             changeLine(ruta_archivo, "portafolioIdNumbers", id_catalogo)
             changeLine(ruta_archivo, "catalogLetters", codigo_catalogo)
 
         ###### modificar library.cm  ########
-        if ruta_archivo == r"C:\CetDev\version14.0\extensions\custom\%s\library.cm" % catalog_name_min:
+        if ruta_archivo == r"C:\CetDev\version15.0\extensions\custom\%s\library.cm" % catalog_name_min:
             changeLine(ruta_archivo, "catalogLetters", codigo_catalogo)
             
             cant_chars = len(brandText)
@@ -79,17 +79,17 @@ def generate(tipo_extension_seleccionado, codigo_catalogo, id_catalogo, catalog_
             changeLine(ruta_archivo, "correo", email)
 
         ###### modificar localize.rs  ########
-        if ruta_archivo == r"C:\CetDev\version14.0\extensions\custom\%s\localize.rs" % catalog_name_min:
+        if ruta_archivo == r"C:\CetDev\version15.0\extensions\custom\%s\localize.rs" % catalog_name_min:
             changeLine(ruta_archivo, "webpage", webpage)
             changeLine(ruta_archivo, "telefono", phone)
             changeLine(ruta_archivo, "correo", email)
 
         ###### modificar lazy.xml  ########
-        if ruta_archivo == r"C:\CetDev\version14.0\extensions\custom\%s\lazy.xml" % catalog_name_min:
+        if ruta_archivo == r"C:\CetDev\version15.0\extensions\custom\%s\lazy.xml" % catalog_name_min:
             changeLine(ruta_archivo, "catalogLetters", codigo_catalogo)
 
         ###### modificar logo.png  ########
-        carpeta_destino = r"C:\CetDev\version14.0\extensions\custom\%s" % catalog_name_min
+        carpeta_destino = r"C:\CetDev\version15.0\extensions\custom\%s" % catalog_name_min
         shutil.copy(logo, carpeta_destino)
         ruta_archivo_logo = os.path.join(carpeta_destino, os.path.basename(logo))
         nuevo_nombre_archivo = os.path.join(carpeta_destino, f"{catalog_name_min}Library.png")
@@ -116,7 +116,7 @@ def generate(tipo_extension_seleccionado, codigo_catalogo, id_catalogo, catalog_
             os.rename(ruta_archivo, ruta_nuevo_archivo)
 
         ###### modificar logo.png  ########
-        carpeta_destino = r"C:\CetDev\version14.0\extensions\custom\%s\secondTab" % catalog_name_min
+        carpeta_destino = r"C:\CetDev\version15.0\extensions\custom\%s\secondTab" % catalog_name_min
         shutil.copy(logo, carpeta_destino)
         ruta_archivo_logo = os.path.join(carpeta_destino, os.path.basename(logo))
         nuevo_nombre_archivo = os.path.join(carpeta_destino, f"products{codigo_catalogo}Library.png")
@@ -140,18 +140,18 @@ def generate(tipo_extension_seleccionado, codigo_catalogo, id_catalogo, catalog_
                 ruta_nuevo_archivo = os.path.join(carpeta_secondtab, nuevo_nombre)
                 os.rename(ruta_archivo, ruta_nuevo_archivo)
 
-            if ruta_archivo == r"C:\CetDev\version14.0\extensions\custom\%s\secondTab\prdctFilteredVisibility.cm" % catalog_name_min:
+            if ruta_archivo == r"C:\CetDev\version15.0\extensions\custom\%s\secondTab\prdctFilteredVisibility.cm" % catalog_name_min:
                 changeLine(ruta_archivo, "productnamemin", product_name_min)
-            if ruta_archivo == r"C:\CetDev\version14.0\extensions\custom\%s\secondTab\prdctLibraryFilters.cm" % catalog_name_min:
+            if ruta_archivo == r"C:\CetDev\version15.0\extensions\custom\%s\secondTab\prdctLibraryFilters.cm" % catalog_name_min:
                 changeLine(ruta_archivo, "productnamemin", product_name_min)
-            if ruta_archivo == r"C:\CetDev\version14.0\extensions\custom\%s\secondTab\productsHeader.cm" % catalog_name_min:
+            if ruta_archivo == r"C:\CetDev\version15.0\extensions\custom\%s\secondTab\productsHeader.cm" % catalog_name_min:
                 changeLine(ruta_archivo, "productnamemin", product_name_min)
-            if ruta_archivo == r"C:\CetDev\version14.0\extensions\custom\%s\secondTab\productsLibrary.cm" % catalog_name_min:
+            if ruta_archivo == r"C:\CetDev\version15.0\extensions\custom\%s\secondTab\productsLibrary.cm" % catalog_name_min:
                 changeLine(ruta_archivo, "partnumber", partnumber)
                 changeLine(ruta_archivo, "productName", productName)
                 changeLine(ruta_archivo, "productnamemin", product_name_min)
                 changeLine(ruta_archivo, "ProductNameMay", product_name_may)
-            if ruta_archivo == r"C:\CetDev\version14.0\extensions\custom\%s\secondTab\localize.rs" % catalog_name_min:
+            if ruta_archivo == r"C:\CetDev\version15.0\extensions\custom\%s\secondTab\localize.rs" % catalog_name_min:
                 changeLine(ruta_archivo, "productName", productName)
                 changeLine(ruta_archivo, "productnamemin", product_name_min)
 
